@@ -17,7 +17,7 @@ webServer.password = "{{ .AdminPassword }}"
 
 {{ range $upstream := .Upstreams }}
 
-[{{ $upstream.Name }}]
+[[proxies]]
 
 {{ if eq $upstream.Type 1 }}
 name = "{{ $upstream.Name }}"
@@ -25,10 +25,6 @@ type = "tcp"
 localIP = "{{ $upstream.TCP.Host }}"
 localPort = {{ $upstream.TCP.Port }}
 remotePort = {{ $upstream.TCP.ServerPort }}
-
-{{ if $upstream.TCP.ProxyProtocol }}
-transport.proxyProtocolVersion = {{ $upstream.TCP.ProxyProtocol }}
-{{ end }}
 
 
 {{ if $upstream.TCP.HealthCheck }}
