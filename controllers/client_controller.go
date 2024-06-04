@@ -195,7 +195,7 @@ func (r *ClientReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctr
 		time.Sleep(120 * time.Second)
 
 		log.Info("reload config")
-		config.Common.AdminAddress = service.Name + "." + service.Namespace + ".svc"
+		config.AdminAddress = service.Name + "." + service.Namespace + ".svc"
 		err = handler.Reload(config)
 		if err != nil {
 			return ctrl.Result{}, err

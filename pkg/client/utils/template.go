@@ -2,28 +2,27 @@ package utils
 
 const CLIENT_TEMPLATE = `
 # frpc.toml
-[common]
-serverAddr = {{ .Common.ServerAddress }}
-serverPort = {{ .Common.ServerPort }}
+serverAddr = "{{ .ServerAddress }}"
+serverPort = {{ .ServerPort }}
 
-{{ if eq .Common.ServerAuthentication.Type 1 }}
+{{ if eq .ServerAuthentication.Type 1 }}
 auth.method = "token"
-auth.token = {{ .Common.ServerAuthentication.Token }}
+auth.token = "{{ .ServerAuthentication.Token }}"
 {{ end }}
 
-webServer.addr = {{ .Common.AdminAddress }}
-webServer.port = {{ .Common.AdminPort }}
-webServer.user = {{ .Common.AdminUsername }}
-webServer.password = {{ .Common.AdminPassword }}
+webServer.addr = "{{ .AdminAddress }}"
+webServer.port = {{ .AdminPort }}
+webServer.user = "{{ .AdminUsername }}"
+webServer.password = "{{ .AdminPassword }}"
 
 {{ range $upstream := .Upstreams }}
 
 [{{ $upstream.Name }}]
 
 {{ if eq $upstream.Type 1 }}
-name = {{ $upstream.Name }}
-type = tcp
-localIP = {{ $upstream.TCP.Host }}
+name = "{{ $upstream.Name }}"
+type = "tcp"
+localIP = "{{ $upstream.TCP.Host }}"
 localPort = {{ $upstream.TCP.Port }}
 remotePort = {{ $upstream.TCP.ServerPort }}
 
@@ -43,9 +42,9 @@ transport.useEncryption = true
 {{ end }}
 
 {{ if eq $upstream.Type 2 }}
-name = {{ $upstream.Name }}
+name = "{{ $upstream.Name }}"
 type = udp
-localIP = {{ $upstream.TCP.Host }}
+localIP = "{{ $upstream.TCP.Host }}"
 localPort = {{ $upstream.TCP.Port }}
 remotePort = {{ $upstream.TCP.ServerPort }}
 {{ end }}

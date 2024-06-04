@@ -23,11 +23,6 @@ const (
 )
 
 type Config struct {
-	Common    Common
-	Upstreams []Upstream
-}
-
-type Common struct {
 	ServerAddress        string
 	ServerPort           int
 	ServerAuthentication ServerAuthentication
@@ -35,6 +30,8 @@ type Common struct {
 	AdminPort            int
 	AdminUsername        string
 	AdminPassword        string
+
+	Upstreams []Upstream
 }
 
 type ServerAuthentication struct {
@@ -78,18 +75,16 @@ type Upstream_UDP struct {
 
 func NewConfig(k8sclient client.Client, clientObject *frpv1alpha1.Client, upstreamObjects []frpv1alpha1.Upstream) (Config, error) {
 	config := Config{
-		Common: Common{
-			ServerAddress: clientObject.Spec.Server.Host,
+		ServerAddress: clientObject.Spec.Server.Host,
 			ServerPort:    clientObject.Spec.Server.Port,
 			AdminAddress:  DEFAULT_ADMIN_ADDRESS,
 			AdminPort:     DEFAULT_ADMIN_PORT,
 			AdminUsername: DEFAULT_ADMIN_USERNAME,
 			AdminPassword: DEFAULT_ADMIN_PASSWORD,
-		},
 	}
 
 	if clientObject.Spec.Server.Authentication.Token != nil {
-		config.Common.ServerAuthentication.Type = 1
+		config.ServerAuthentication.Type = 1
 
 		secret := &corev1.Secret{}
 		err := k8sclient.Get(context.TODO(), types.NamespacedName{Name: clientObject.Spec.Server.Authentication.Token.Secret.Name, Namespace: clientObject.Namespace}, secret)
@@ -104,7 +99,7 @@ func NewConfig(k8sclient client.Client, clientObject *frpv1alpha1.Client, upstre
 			return config, err
 		}
 
-		config.Common.ServerAuthentication.Token = string(tokenByte)
+		config.ServerAuthentication.Token = string(tokenByte)
 	}
 
 	upstreams := []Upstream{}
